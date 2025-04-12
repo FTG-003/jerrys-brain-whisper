@@ -1,19 +1,4 @@
-
-// TheBrain API service
-// Documentation: https://api.bra.in
-
-export interface ThoughtNode {
-  id: string;
-  name: string;
-  typeId?: number;
-  label?: string;
-}
-
-export interface ThoughtSearchResult {
-  thoughts: ThoughtNode[];
-  hasMore?: boolean;
-  nextOffset?: number;
-}
+import { ThoughtNode, ThoughtSearchResult } from './brainTypes';
 
 const BRAIN_ID = '3d80058c-14d8-5361-0b61-a061f89baf87';
 const API_KEY = 'c9893844370bcc3d6d07f52864b178233c1429689e2ecadc14857ac759ff03c3';
@@ -32,9 +17,15 @@ export async function searchThoughts(
   offset: number = 0
 ): Promise<ThoughtSearchResult> {
   try {
-    const url = `${BASE_URL}/brains/${BRAIN_ID}/search?query=${encodeURIComponent(
-      query
-    )}&limit=${limit}&offset=${offset}`;
+    console.log('Searching thoughts with params:', { query, limit, offset });
+    
+    const url = `${BASE_URL}/brains/${BRAIN_ID}/search?query=${encodeURIComponent(query)}&limit=${limit}&offset=${offset}`;
+    
+    console.log('Request URL:', url);
+    console.log('Request Headers:', {
+      'Authorization': `TheBrain ${API_KEY}`,
+      'Content-Type': 'application/json',
+    });
 
     const response = await fetch(url, {
       method: 'GET',
@@ -44,18 +35,24 @@ export async function searchThoughts(
       },
     });
 
+    console.log('Response status:', response.status);
+    
     if (!response.ok) {
-      throw new Error(`API error: ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('API Error Response:', errorText);
+      throw new Error(`API error: ${response.statusText} - ${errorText}`);
     }
 
     const data = await response.json();
+    console.log('API Response Data:', data);
+
     return {
       thoughts: data.thoughts || [],
       hasMore: data.hasMore,
       nextOffset: data.nextOffset,
     };
   } catch (error) {
-    console.error('Error searching thoughts:', error);
+    console.error('Detailed Error in searchThoughts:', error);
     throw error;
   }
 }
