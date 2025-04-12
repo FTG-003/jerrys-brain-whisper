@@ -2,12 +2,11 @@
 # Jerry's Brain Whisper
 
 A conversational interface to explore Jerry Michalski's Brain - a vast network of interconnected thoughts and ideas.
-![lèbu](https://github.com/FTG-003/jerrys-brain-whisper/raw/main/src/images/lèbu.png)
-
 
 ## Project Overview
 
 Jerry's Brain Whisper is a web application that allows users to interact with Jerry Michalski's thought network (hosted on TheBrain.com) as if it were a living, conversational mind. Users can explore concepts through a chat interface, receiving friendly responses that showcase the connections between thoughts in Jerry's Brain.
+
 
 ## Features
 
@@ -17,6 +16,8 @@ Jerry's Brain Whisper is a web application that allows users to interact with Je
 - Interactive visualization of thought relationships
 - Friendly, whimsical bot personality that mimics a librarian of Jerry's thoughts
 - Fully responsive design for mobile and desktop
+
+  ![lèbu](https://github.com/FTG-003/jerrys-brain-whisper/raw/main/src/images/lèbu.png)
 
 ## Technical Details
 
