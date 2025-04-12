@@ -1,73 +1,54 @@
-# Welcome to your Lovable project
 
-## Project info
+# Jerry's Brain Whisper
 
-**URL**: https://lovable.dev/projects/cc95b39c-1b32-4d39-9bbe-f7d32ddf7263
+A conversational interface to explore Jerry Michalski's Brain - a vast network of interconnected thoughts and ideas.
 
-## How can I edit this code?
+## Project Overview
 
-There are several ways of editing your application.
+Jerry's Brain Whisper is a web application that allows users to interact with Jerry Michalski's thought network (hosted on TheBrain.com) as if it were a living, conversational mind. Users can explore concepts through a chat interface, receiving friendly responses that showcase the connections between thoughts in Jerry's Brain.
 
-**Use Lovable**
+## Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/cc95b39c-1b32-4d39-9bbe-f7d32ddf7263) and start prompting.
+- Conversational chat interface to query Jerry's Brain
+- Search for any concept or keyword in the thought network
+- View related thoughts and connections
+- Interactive visualization of thought relationships
+- Friendly, whimsical bot personality that mimics a librarian of Jerry's thoughts
+- Fully responsive design for mobile and desktop
 
-Changes made via Lovable will be committed automatically to this repo.
+## Technical Details
 
-**Use your preferred IDE**
+This project uses:
+- React with TypeScript
+- Tailwind CSS for styling
+- TheBrain API (https://api.bra.in) for accessing Jerry's thought network
+- Canvas-based visualization for thought connections
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## API Information
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+The application connects to TheBrain's official API with the following credentials:
+- Brain ID: `3d80058c-14d8-5361-0b61-a061f89baf87`
+- API Key: `c9893844370bcc3d6d07f52864b178233c1429689e2ecadc14857ac759ff03c3`
 
-Follow these steps:
+## Running Locally
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+1. Clone this repository
+2. Install dependencies with `npm install`
+3. Run the development server with `npm run dev`
+4. Open [http://localhost:8080](http://localhost:8080) in your browser
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## Deployment
 
-# Step 3: Install the necessary dependencies.
-npm i
+This project can be easily deployed to:
+- GitHub Pages
+- Netlify
+- Vercel
+- Any static site hosting
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+## About
 
-**Edit a file directly in GitHub**
+This project is part of an open AI/learning experiment from the Peeragogy + Pyragogy community. It's a gift for Jerry Michalski and a playful learning tool for curious minds.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## License
 
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/cc95b39c-1b32-4d39-9bbe-f7d32ddf7263) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes it is!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+MIT License
