@@ -55,3 +55,10 @@ This project is part of an open AI/learning experiment from the Peeragogy + Pyra
 ## License
 
 MIT License
+
+---
+
+🧠 A project inspired by  
+**[Pyragogy](https://pyragogy.org) — Co-creating the Future of AI-Human Learning**
+
+✍️ Created by [FTG-003](https://github.com/FTG-003) & Gino 🤖  
