@@ -2,6 +2,8 @@
 # Jerry's Brain Whisper
 
 A conversational interface to explore Jerry Michalski's Brain - a vast network of interconnected thoughts and ideas.
+![lèbu](https://github.com/FTG-003/jerrys-brain-whisper/raw/main/src/images/lèbu.png)
+
 
 ## Project Overview
 
