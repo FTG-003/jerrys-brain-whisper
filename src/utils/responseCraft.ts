@@ -1,5 +1,4 @@
-
-import { ThoughtNode } from '@/services/brainApi';
+import { ThoughtNode } from '@/services/brainTypes';
 
 // Friendly introductions for chat responses
 const INTROS = [

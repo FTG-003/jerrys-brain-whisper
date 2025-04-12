@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import ChatMessage from './ChatMessage';
 import ThoughtNode, { Thought } from './ThoughtNode';
@@ -6,15 +5,15 @@ import ThinkingIndicator from './ThinkingIndicator';
 import ThoughtGraph from './ThoughtGraph';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
-import { searchThoughts, getRelatedThoughts, getThought, ThoughtNode as ApiThoughtNode } from '@/services/brainApi';
+import { searchThoughts, getRelatedThoughts, getThought } from '@/services/brainApi';
+import { ThoughtNode as ApiThoughtNode } from '@/services/brainTypes';
 import {
   generateWelcomeMessage,
   generateSearchResponse,
   generateThoughtExplorationResponse,
   generateErrorMessage
 } from '@/utils/responseCraft';
-import { Search, BrainCog, ZoomIn, ZoomOut, Info } from 'lucide-react';
+import { Search, BrainCog, ZoomIn, ZoomOut, Info, ChevronRight, ChevronLeft } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -170,35 +169,33 @@ const JerrysBrainChat: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="bg-brain-primary text-white py-3 px-6 flex items-center justify-between">
+      <div className="bg-brain-primary text-white py-3 px-6 flex items-center justify-between shadow-md border-b border-white/10">
         <div className="flex items-center">
-          <BrainCog className="mr-2 h-6 w-6" />
+          <BrainCog className="mr-2 h-6 w-6 text-brain-light" />
           <h1 className="text-xl font-semibold">Jerry's Brain Explorer</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button 
             variant="ghost" 
             size="sm"
-            className="text-white hover:bg-white/20"
+            className="text-white hover:bg-white/10 transition-colors"
             onClick={toggleChat}
           >
-            <Info className="h-5 w-5" />
+            {showChat ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
             <span className="ml-1">{showChat ? 'Hide Info' : 'Show Info'}</span>
           </Button>
         </div>
       </div>
       
-      <div className="flex flex-1 overflow-hidden bg-brain-background">
-        {/* Main visualization area */}
+      <div className="flex flex-1 overflow-hidden bg-gradient-to-b from-brain-primary/90 to-brain-dark">
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Graph controls */}
-          <div className="bg-white/50 backdrop-blur-sm p-2 flex justify-between items-center border-b border-brain-light">
+          <div className="backdrop-blur-sm bg-white/5 border-b border-white/10 p-2 flex justify-between items-center">
             <div className="flex gap-2">
               <Button 
                 variant="outline" 
                 size="sm"
                 onClick={handleZoomIn}
-                className="bg-white hover:bg-brain-light"
+                className="bg-brain-dark/70 hover:bg-brain-primary border-brain-light/30 text-white"
               >
                 <ZoomIn className="h-4 w-4" />
               </Button>
@@ -206,20 +203,19 @@ const JerrysBrainChat: React.FC = () => {
                 variant="outline" 
                 size="sm"
                 onClick={handleZoomOut}
-                className="bg-white hover:bg-brain-light"
+                className="bg-brain-dark/70 hover:bg-brain-primary border-brain-light/30 text-white"
               >
                 <ZoomOut className="h-4 w-4" />
               </Button>
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-brain-light">
               {thoughtResults?.mainThought 
                 ? `Exploring: ${thoughtResults.mainThought.name}` 
                 : 'Search for a concept to begin'}
             </div>
           </div>
           
-          {/* Main graph visualization */}
-          <div className="flex-1 overflow-hidden bg-gradient-to-b from-brain-background to-white/90">
+          <div className="flex-1 overflow-hidden bg-gradient-to-b from-brain-dark to-brain-primary/70">
             {thoughtResults?.mainThought ? (
               <div 
                 className="w-full h-full" 
@@ -233,28 +229,27 @@ const JerrysBrainChat: React.FC = () => {
                 />
               </div>
             ) : (
-              <div className="flex items-center justify-center h-full text-gray-400 flex-col">
-                <BrainCog className="h-16 w-16 mb-4 text-brain-light" />
-                <p>Search for a concept in Jerry's Brain</p>
+              <div className="flex items-center justify-center h-full flex-col">
+                <BrainCog className="h-16 w-16 mb-4 text-brain-light animate-pulse-slow" />
+                <p className="text-brain-light">Search for a concept in Jerry's Brain</p>
               </div>
             )}
           </div>
           
-          {/* Search bar */}
-          <div className="bg-white p-4 border-t border-gray-200">
+          <div className="backdrop-blur-sm bg-brain-dark/70 border-t border-white/10 p-4">
             <div className="max-w-4xl mx-auto flex gap-2">
               <Input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Search Jerry's Brain (e.g. trust, capitalism, AI)..."
-                className="flex-1"
+                className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/50"
                 disabled={isThinking}
               />
               <Button 
                 onClick={handleSend} 
                 disabled={!input.trim() || isThinking}
-                className="bg-brain-primary hover:bg-brain-dark"
+                className="bg-brain-secondary hover:bg-brain-secondary/80 text-white"
               >
                 <Search className="h-4 w-4" />
               </Button>
@@ -262,43 +257,42 @@ const JerrysBrainChat: React.FC = () => {
           </div>
         </div>
         
-        {/* Chat sidebar */}
-        <div className={`w-1/3 max-w-md border-l border-brain-light bg-white/90 backdrop-blur-sm overflow-hidden transition-all duration-300 ease-in-out ${showChat ? '' : 'w-0 max-w-0 border-l-0'}`}>
+        <div className={`border-l border-white/10 backdrop-blur-sm bg-brain-dark/80 overflow-hidden transition-all duration-300 ease-in-out ${showChat ? 'w-1/3 max-w-md' : 'w-0 max-w-0 border-l-0'}`}>
           {showChat && (
             <div className="h-full flex flex-col">
-              <div className="p-3 border-b border-brain-light bg-gray-50">
-                <h2 className="font-medium text-brain-dark">Thoughts & Connections</h2>
+              <div className="p-3 border-b border-white/10 bg-brain-primary/50">
+                <h2 className="font-medium text-white">Thoughts & Connections</h2>
               </div>
               
-              <div className="flex-1 overflow-y-auto p-4">
+              <div className="flex-1 overflow-y-auto p-4 scrollbar-none">
                 {messages.map(message => (
                   <ChatMessage
                     key={message.id}
                     content={message.content}
                     isUser={message.isUser}
-                    className={message.isUser ? "bg-gray-100 ml-auto" : "bg-brain-light"}
+                    className={message.isUser ? "bg-brain-primary/70 border border-white/10" : "bg-brain-dark/60 border border-white/5"}
                   />
                 ))}
                 {isThinking && (
                   <ChatMessage
                     content={<ThinkingIndicator />}
                     isUser={false}
+                    className="bg-brain-dark/60 border border-white/5"
                   />
                 )}
                 <div ref={endOfMessagesRef} />
               </div>
               
-              {/* Related thoughts in sidebar */}
               {thoughtResults && thoughtResults.relatedThoughts.length > 0 && (
-                <div className="p-4 border-t border-brain-light bg-gray-50">
-                  <h3 className="text-sm font-medium mb-2 text-brain-dark">Related Thoughts</h3>
-                  <div className="max-h-60 overflow-y-auto">
+                <div className="p-4 border-t border-white/10 bg-brain-primary/40">
+                  <h3 className="text-sm font-medium mb-2 text-brain-light">Related Thoughts</h3>
+                  <div className="max-h-60 overflow-y-auto scrollbar-none">
                     {thoughtResults.relatedThoughts.map(thought => (
                       <ThoughtNode
                         key={thought.id}
                         thought={thought}
                         onClick={handleThoughtClick}
-                        className="mb-2"
+                        className="mb-2 hover:bg-white/5"
                       />
                     ))}
                   </div>
