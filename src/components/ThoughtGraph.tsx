@@ -1,6 +1,5 @@
-
 import React, { useEffect, useRef, useState } from 'react';
-import { ThoughtNode } from '@/services/brainApi';
+import { ThoughtNode } from '@/services/brainTypes';
 
 interface ThoughtGraphProps {
   centralThought: ThoughtNode;
@@ -19,7 +18,6 @@ const ThoughtGraph: React.FC<ThoughtGraphProps> = ({
   const [hoveredNode, setHoveredNode] = useState<ThoughtNode | null>(null);
   const nodePositions = useRef<Map<string, {x: number, y: number, radius: number}>>(new Map());
 
-  // Calculate node positions and draw the graph
   useEffect(() => {
     if (!canvasRef.current || !centralThought || !relatedThoughts.length) return;
 
@@ -27,31 +25,25 @@ const ThoughtGraph: React.FC<ThoughtGraphProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas width and height to match its display size
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width;
     canvas.height = rect.height;
 
-    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Calculate center position
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     const radius = Math.min(centerX, centerY) * 0.7;
 
-    // Store central node position
     nodePositions.current.set(centralThought.id, {
       x: centerX,
       y: centerY,
       radius: 35
     });
 
-    // Draw lines from center to each related thought
-    ctx.strokeStyle = '#c7d2fe'; // Light indigo color
+    ctx.strokeStyle = '#c7d2fe';
     ctx.lineWidth = 2;
 
-    // Draw related thought nodes in a circle around the central node
     const sliceAngle = (Math.PI * 2) / relatedThoughts.length;
     
     relatedThoughts.forEach((thought, index) => {
@@ -59,36 +51,30 @@ const ThoughtGraph: React.FC<ThoughtGraphProps> = ({
       const x = centerX + radius * Math.cos(angle);
       const y = centerY + radius * Math.sin(angle);
       
-      // Store node position for interaction
       nodePositions.current.set(thought.id, {
         x: x,
         y: y,
         radius: 25
       });
       
-      // Draw line from center to node
       ctx.beginPath();
       ctx.moveTo(centerX, centerY);
       ctx.lineTo(x, y);
       ctx.stroke();
     });
 
-    // Draw nodes
     drawNodes(ctx, hoveredNode);
 
   }, [centralThought, relatedThoughts, hoveredNode]);
 
-  // Function to draw all nodes
   const drawNodes = (ctx: CanvasRenderingContext2D, hoveredNode: ThoughtNode | null) => {
-    // Draw central node
     const centralPos = nodePositions.current.get(centralThought.id);
     if (centralPos) {
-      ctx.fillStyle = '#6366f1'; // Indigo
+      ctx.fillStyle = '#6366f1';
       ctx.beginPath();
       ctx.arc(centralPos.x, centralPos.y, centralPos.radius, 0, Math.PI * 2);
       ctx.fill();
 
-      // Add gradient effect for central node
       const gradient = ctx.createRadialGradient(
         centralPos.x, centralPos.y, 0,
         centralPos.x, centralPos.y, centralPos.radius
@@ -100,7 +86,6 @@ const ThoughtGraph: React.FC<ThoughtGraphProps> = ({
       ctx.arc(centralPos.x, centralPos.y, centralPos.radius, 0, Math.PI * 2);
       ctx.fill();
 
-      // Draw text for central node
       ctx.fillStyle = 'white';
       ctx.font = '14px Arial';
       ctx.textAlign = 'center';
@@ -111,14 +96,11 @@ const ThoughtGraph: React.FC<ThoughtGraphProps> = ({
       ctx.fillText(centralText, centralPos.x, centralPos.y);
     }
 
-    // Draw related nodes
     relatedThoughts.forEach((thought) => {
       const pos = nodePositions.current.get(thought.id);
       if (pos) {
-        // Change appearance if hovered
         const isHovered = hoveredNode && hoveredNode.id === thought.id;
         
-        // Draw node with gradient
         const gradient = ctx.createRadialGradient(
           pos.x, pos.y, 0,
           pos.x, pos.y, pos.radius
@@ -130,7 +112,6 @@ const ThoughtGraph: React.FC<ThoughtGraphProps> = ({
         ctx.arc(pos.x, pos.y, isHovered ? pos.radius * 1.1 : pos.radius, 0, Math.PI * 2);
         ctx.fill();
 
-        // Draw text for node
         ctx.fillStyle = 'white';
         ctx.font = isHovered ? 'bold 13px Arial' : '13px Arial';
         ctx.textAlign = 'center';
@@ -143,7 +124,6 @@ const ThoughtGraph: React.FC<ThoughtGraphProps> = ({
     });
   };
 
-  // Handle mouse interactions
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!canvasRef.current) return;
     
@@ -151,10 +131,8 @@ const ThoughtGraph: React.FC<ThoughtGraphProps> = ({
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
     
-    // Check if mouse is over any node
     let hovered: ThoughtNode | null = null;
     
-    // Check related thoughts first (so they appear on top)
     for (const thought of relatedThoughts) {
       const pos = nodePositions.current.get(thought.id);
       if (pos) {
@@ -168,7 +146,6 @@ const ThoughtGraph: React.FC<ThoughtGraphProps> = ({
       }
     }
     
-    // Check central thought if no related thought is hovered
     if (!hovered) {
       const centralPos = nodePositions.current.get(centralThought.id);
       if (centralPos) {
@@ -181,10 +158,8 @@ const ThoughtGraph: React.FC<ThoughtGraphProps> = ({
       }
     }
     
-    // Update hover state
     setHoveredNode(hovered);
     
-    // Update cursor style
     canvasRef.current.style.cursor = hovered ? 'pointer' : 'default';
   };
 

@@ -1,8 +1,5 @@
 import { ThoughtNode, ThoughtSearchResult } from './brainTypes';
-
-const BRAIN_ID = '3d80058c-14d8-5361-0b61-a061f89baf87';
-const API_KEY = 'c9893844370bcc3d6d07f52864b178233c1429689e2ecadc14857ac759ff03c3';
-const BASE_URL = 'https://api.bra.in/v2';
+import { BRAIN_ID, API_KEY, BASE_URL } from './brainApiConfig';
 
 /**
  * Search for thoughts in Jerry's Brain
