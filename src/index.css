@@ -5,69 +5,31 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 243 75% 59%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 240 79% 67%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 240 79% 90%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 243 75% 59%;
-
-    --radius: 0.5rem;
-  }
-
-  * {
-    @apply border-border;
+    --background: 240 10% 3.9%; /*  Dark background using the provided color */
+    --foreground: 0 0% 98%; /*  Light foreground for contrast */
+    --primary: 240 45% 22%; /*  Based on rgb(41, 41, 63) */
+    --primary-foreground: 0 0% 98%;
   }
 
   body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    @apply bg-brain-primary text-white antialiased;
   }
 }
 
 @layer components {
   .node-card {
-    @apply bg-white border border-brain-light rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200;
+    @apply bg-brain-dark/70 border border-brain-light/30 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200;
   }
   
   .chat-message {
-    @apply p-4 rounded-lg mb-4 max-w-[80%];
+    @apply p-4 rounded-lg mb-4 max-w-[80%] bg-brain-dark/50;
   }
   
   .user-message {
-    @apply chat-message bg-brain-primary text-white ml-auto;
+    @apply chat-message bg-brain-primary/70 text-white ml-auto;
   }
   
   .bot-message {
-    @apply chat-message bg-brain-light text-gray-800;
-  }
-  
-  .thinking-dot {
-    @apply w-2 h-2 rounded-full bg-brain-primary inline-block mx-0.5;
-  }
-  
-  .node-link {
-    @apply text-brain-primary hover:text-brain-dark underline transition-colors duration-200;
+    @apply chat-message bg-brain-dark/60 text-gray-100;
   }
 }
