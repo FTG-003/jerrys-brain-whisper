@@ -15,7 +15,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
 }) => {
   return (
     <div className={cn(
-      isUser ? 'user-message' : 'bot-message',
+      "p-3 rounded-lg mb-3 text-sm",
+      isUser 
+        ? "user-message bg-gray-100 text-gray-800 ml-auto" 
+        : "bot-message bg-brain-light/70 text-gray-800",
+      "max-w-full",
       className
     )}>
       {content}
