@@ -30,8 +30,8 @@ This project uses:
 ## API Information
 
 The application connects to TheBrain's official API with the following credentials:
-- Brain ID: `3d80058c-14d8-5361-0b61-a061f89baf87`
-- API Key: `c9893844370bcc3d6d07f52864b178233c1429689e2ecadc14857ac759ff03c3`
+- Brain ID: `.............`
+- API Key: `..............`
 
 ## Running Locally
 
