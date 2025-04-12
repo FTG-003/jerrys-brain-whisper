@@ -10,6 +10,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  base: "./", // Add this line to ensure assets are loaded correctly when deployed
   plugins: [
     react(),
     mode === 'development' &&
