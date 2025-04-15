@@ -1,20 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ChatMessage from './ChatMessage';
-import ThoughtNode, { Thought } from './ThoughtNode';
+import ThoughtNode from './ThoughtNode';
 import ThinkingIndicator from './ThinkingIndicator';
 import ThoughtGraph from './ThoughtGraph';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { searchThoughts, getRelatedThoughts, getThought } from '@/services/brainApi';
 import { ThoughtNode as ApiThoughtNode } from '@/services/brainTypes';
-import {
-  generateWelcomeMessage,
-  generateSearchResponse,
-  generateThoughtExplorationResponse,
-  generateErrorMessage
+import { 
+  generateWelcomeMessage, 
+  generateSearchResponse, 
+  generateThoughtExplorationResponse, 
+  generateErrorMessage 
 } from '@/utils/responseCraft';
-import { Search, BrainCog, ZoomIn, ZoomOut, Info, ChevronRight, ChevronLeft } from 'lucide-react';
-import { Loader2 } from '@/components/ui/loader';
+import { Search, BrainCog, ZoomIn, ZoomOut, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 interface Message {
   id: string;
