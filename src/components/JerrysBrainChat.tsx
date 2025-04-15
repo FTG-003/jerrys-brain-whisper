@@ -10,15 +10,18 @@ import { searchThoughts, getRelatedThoughts, getThought } from '@/services/brain
 import { ThoughtNode as ApiThoughtNode } from '@/services/brainTypes';
 import { generateWelcomeMessage, generateSearchResponse, generateThoughtExplorationResponse, generateErrorMessage } from '@/utils/responseCraft';
 import { Search, BrainCog, ZoomIn, ZoomOut, ChevronRight, ChevronLeft, Loader2 } from 'lucide-react';
+
 interface Message {
   id: string;
   content: string;
   isUser: boolean;
 }
+
 interface ThoughtResult {
   mainThought?: ApiThoughtNode;
   relatedThoughts: ApiThoughtNode[];
 }
+
 const JerrysBrainChat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([{
     id: '0',
@@ -31,6 +34,7 @@ const JerrysBrainChat: React.FC = () => {
   const [showChat, setShowChat] = useState<boolean>(false);
   const [graphZoom, setGraphZoom] = useState<number>(1);
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (endOfMessagesRef.current) {
       endOfMessagesRef.current.scrollIntoView({
@@ -38,6 +42,7 @@ const JerrysBrainChat: React.FC = () => {
       });
     }
   }, [messages]);
+
   const handleSend = async () => {
     if (!input.trim()) return;
     const userMessage = input.trim();
@@ -84,6 +89,7 @@ const JerrysBrainChat: React.FC = () => {
       setIsThinking(false);
     }
   };
+
   const handleThoughtClick = async (thought: ApiThoughtNode) => {
     setIsThinking(true);
     try {
@@ -111,6 +117,7 @@ const JerrysBrainChat: React.FC = () => {
       setIsThinking(false);
     }
   };
+
   const handleSuggestionClick = async (thoughtId: string) => {
     setIsThinking(true);
     try {
@@ -138,25 +145,30 @@ const JerrysBrainChat: React.FC = () => {
       setIsThinking(false);
     }
   };
+
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleSend();
     }
   };
+
   const toggleChat = () => {
     setShowChat(!showChat);
   };
+
   const handleZoomIn = () => {
     setGraphZoom(prev => Math.min(prev + 0.2, 2));
   };
+
   const handleZoomOut = () => {
     setGraphZoom(prev => Math.max(prev - 0.2, 0.6));
   };
+
   return <div className="flex flex-col h-full">
       <div className="bg-brain-primary text-white py-3 px-6 flex items-center justify-between shadow-md border-b border-white/10">
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           <BrainCog className="mr-2 h-6 w-6 text-brain-light animate-pulse-slow" />
-          <h1 className="text-xl font-semibold"></h1>
+          <h1 className="text-xl font-semibold">Thought Explorer</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 transition-colors" onClick={toggleChat}>
@@ -167,7 +179,7 @@ const JerrysBrainChat: React.FC = () => {
       </div>
       
       <div className="flex flex-1 overflow-hidden bg-gradient-to-b from-brain-primary/90 to-brain-dark">
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden relative">
           <div className="backdrop-blur-sm bg-white/5 border-b border-white/10 p-2 flex justify-between items-center">
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={handleZoomIn} className="bg-brain-dark/70 hover:bg-brain-primary border-brain-light/30 text-white">
@@ -182,7 +194,7 @@ const JerrysBrainChat: React.FC = () => {
             </div>
           </div>
           
-          <div className="flex-1 overflow-hidden bg-gradient-to-b from-brain-dark to-brain-primary/70">
+          <div className="flex-1 overflow-hidden bg-gradient-to-b from-brain-dark to-brain-primary/70 relative">
             {thoughtResults?.mainThought ? <div className="w-full h-full" style={{
             transform: `scale(${graphZoom})`,
             transformOrigin: 'center'
@@ -232,4 +244,5 @@ const JerrysBrainChat: React.FC = () => {
       <AiAssistant currentThought={thoughtResults?.mainThought} relatedThoughts={thoughtResults?.relatedThoughts} onSuggestionClick={handleSuggestionClick} />
     </div>;
 };
+
 export default JerrysBrainChat;

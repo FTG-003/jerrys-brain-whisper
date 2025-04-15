@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import JerrysBrainChat from '@/components/JerrysBrainChat';
 import ApiStatusChecker from '@/components/ApiStatusChecker';
@@ -12,6 +13,7 @@ import { ChevronDown, Settings, AlertCircle, X, CheckCircle } from 'lucide-react
 import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { toast } from '@/hooks/use-toast';
+import { BrainCog } from '@/components/Icons';
 
 const Index: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false);
@@ -103,7 +105,8 @@ const Index: React.FC = () => {
       </div>
       
       <div className="relative bg-brain-primary text-white py-3 px-6 flex items-center justify-center border-b border-white/10">
-        <div className="flex items-center">
+        <div className="flex items-center gap-3">
+          <BrainCog className="h-6 w-6 text-brain-light animate-pulse-slow" />
           <h1 className="text-xl font-semibold">Jerry's Brain Explorer</h1>
         </div>
         
