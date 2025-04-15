@@ -1,17 +1,17 @@
 
 import React, { useState } from 'react';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, ExternalLink, ChevronDown, ChevronUp, KeyRound } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Search, ExternalLink, KeyRound, Eye, EyeOff } from 'lucide-react';
 import { validateApiConfig } from '@/services/apiValidator';
 import { toast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
 
 const ApiKeyExplorer: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Array<{ key: string; description: string }>>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [isKeyVisible, setIsKeyVisible] = useState(false);
 
   // This is a mock function. In a real implementation, you would search for keys in a database or API
   const searchForKeys = async (query: string) => {
@@ -85,93 +85,106 @@ const ApiKeyExplorer: React.FC = () => {
     }
   };
 
+  const toggleKeyVisibility = () => {
+    setIsKeyVisible(!isKeyVisible);
+  };
+
+  const formatKey = (key: string) => {
+    if (isKeyVisible) {
+      return key;
+    }
+    // Show only first 6 and last 4 characters
+    return `${key.substring(0, 6)}...${key.substring(key.length - 4)}`;
+  };
+
   return (
-    <Collapsible
-      open={isOpen}
-      onOpenChange={setIsOpen}
-      className="p-6 rounded-lg border border-white/10 bg-brain-dark/50 backdrop-blur-md"
-    >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <KeyRound className="h-5 w-5 text-brain-secondary" />
-          <h2 className="text-xl font-medium text-white">API Key Explorer</h2>
-        </div>
-        <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
-            {isOpen ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-            <span className="sr-only">Toggle</span>
-          </Button>
-        </CollapsibleTrigger>
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <a 
+          href="https://api.bra.in/index.html" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 text-brain-secondary hover:underline"
+        >
+          <ExternalLink className="h-4 w-4" />
+          <span>TheBrain API Documentation</span>
+        </a>
       </div>
       
-      <CollapsibleContent className="mt-4 space-y-4">
-        <div className="flex items-center gap-2">
-          <a 
-            href="https://api.bra.in/index.html" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 text-brain-secondary hover:underline"
-          >
-            <ExternalLink className="h-4 w-4" />
-            <span>TheBrain API Documentation</span>
-          </a>
-        </div>
-        
-        <form onSubmit={handleSearch} className="flex gap-2">
-          <Input
-            type="text"
-            placeholder="Search for API keys..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1 bg-brain-dark/30 border-white/20 text-white"
-          />
-          <Button 
-            type="submit" 
-            disabled={isSearching}
-            className="bg-brain-secondary hover:bg-brain-secondary/80 text-white"
-          >
-            <Search className="h-4 w-4 mr-1" />
-            {isSearching ? 'Searching...' : 'Search'}
-          </Button>
-        </form>
-        
-        {searchResults.length > 0 && (
-          <div className="bg-brain-dark/70 rounded-md border border-white/10 overflow-hidden">
-            <ul className="divide-y divide-white/10">
-              {searchResults.map((result, index) => (
-                <li key={index} className="p-3 hover:bg-white/5">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div>
-                      <div className="font-mono text-sm text-white/80 truncate">
-                        {result.key}
+      <form onSubmit={handleSearch} className="flex gap-2">
+        <Input
+          type="text"
+          placeholder="Search for API keys (e.g., demo, read-only)..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="flex-1 bg-brain-dark/30 border-white/20 text-white"
+        />
+        <Button 
+          type="submit" 
+          disabled={isSearching}
+          className="bg-brain-secondary hover:bg-brain-secondary/80 text-white"
+        >
+          {isSearching ? (
+            <>
+              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+              Searching...
+            </>
+          ) : (
+            <>
+              <Search className="h-4 w-4 mr-1" />
+              Search
+            </>
+          )}
+        </Button>
+      </form>
+      
+      {searchResults.length > 0 && (
+        <div className="bg-brain-dark/70 rounded-md border border-white/10 overflow-hidden">
+          <ul className="divide-y divide-white/10">
+            {searchResults.map((result, index) => (
+              <li key={index} className="p-3 hover:bg-white/5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <div className="font-mono text-sm text-white/80 truncate flex-1">
+                        {formatKey(result.key)}
                       </div>
-                      <div className="text-xs text-white/60">{result.description}</div>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={toggleKeyVisibility}
+                        className="text-white/60 hover:text-white"
+                      >
+                        {isKeyVisible ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </Button>
                     </div>
-                    <Button
-                      size="sm"
-                      onClick={() => handleSelectKey(result.key)}
-                      className="bg-brain-secondary hover:bg-brain-secondary/80 text-white"
-                    >
-                      Use This Key
-                    </Button>
+                    <div className="text-xs text-white/60">{result.description}</div>
                   </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        
-        {searchQuery && searchResults.length === 0 && !isSearching && (
-          <div className="text-center p-4 text-white/60">
-            No API keys found matching "{searchQuery}"
-          </div>
-        )}
-      </CollapsibleContent>
-    </Collapsible>
+                  <Button
+                    size="sm"
+                    onClick={() => handleSelectKey(result.key)}
+                    className="bg-brain-secondary hover:bg-brain-secondary/80 text-white whitespace-nowrap"
+                  >
+                    <KeyRound className="h-4 w-4 mr-1" />
+                    Use This Key
+                  </Button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      
+      {searchQuery && searchResults.length === 0 && !isSearching && (
+        <div className="text-center p-4 text-white/60">
+          No API keys found matching "{searchQuery}"
+        </div>
+      )}
+    </div>
   );
 };
 

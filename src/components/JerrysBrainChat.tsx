@@ -14,6 +14,7 @@ import {
   generateErrorMessage
 } from '@/utils/responseCraft';
 import { Search, BrainCog, ZoomIn, ZoomOut, Info, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Loader2 } from '@/components/ui/loader';
 
 interface Message {
   id: string;
@@ -33,11 +34,10 @@ const JerrysBrainChat: React.FC = () => {
   const [input, setInput] = useState<string>('');
   const [isThinking, setIsThinking] = useState<boolean>(false);
   const [thoughtResults, setThoughtResults] = useState<ThoughtResult | null>(null);
-  const [showChat, setShowChat] = useState<boolean>(false);
+  const [showChat, setShowChat] = useState<boolean>(true);
   const [graphZoom, setGraphZoom] = useState<number>(1);
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to bottom when messages change
   useEffect(() => {
     if (endOfMessagesRef.current) {
       endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -50,7 +50,6 @@ const JerrysBrainChat: React.FC = () => {
     const userMessage = input.trim();
     setInput('');
     
-    // Add user message to chat
     const newUserMessage: Message = {
       id: Date.now().toString(),
       content: userMessage,
@@ -58,22 +57,17 @@ const JerrysBrainChat: React.FC = () => {
     };
     setMessages(prev => [...prev, newUserMessage]);
     
-    // Show thinking indicator
     setIsThinking(true);
     setThoughtResults(null);
     
     try {
-      // Search for thoughts related to the user's query
       const searchResult = await searchThoughts(userMessage);
       
       let botResponseContent = '';
       let thoughtResult: ThoughtResult = { relatedThoughts: [] };
       
       if (searchResult.thoughts.length > 0) {
-        // Generate response based on search results
         botResponseContent = generateSearchResponse(userMessage, searchResult.thoughts);
-        
-        // Store the thought results for display
         thoughtResult = {
           relatedThoughts: searchResult.thoughts
         };
@@ -81,7 +75,6 @@ const JerrysBrainChat: React.FC = () => {
         botResponseContent = generateSearchResponse(userMessage, []);
       }
       
-      // Add bot response to chat
       const newBotMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: botResponseContent,
@@ -91,7 +84,6 @@ const JerrysBrainChat: React.FC = () => {
       setMessages(prev => [...prev, newBotMessage]);
       setThoughtResults(thoughtResult);
       
-      // Automatically show chat when new results arrive
       setShowChat(true);
     } catch (error) {
       console.error('Error searching thoughts:', error);
@@ -110,19 +102,16 @@ const JerrysBrainChat: React.FC = () => {
     setIsThinking(true);
     
     try {
-      // Fetch the thought and its relations
       const [thoughtDetails, relatedThoughts] = await Promise.all([
         getThought(thought.id),
         getRelatedThoughts(thought.id)
       ]);
       
-      // Generate response based on the thought and its relations
       const botResponseContent = generateThoughtExplorationResponse(
         thoughtDetails, 
         relatedThoughts
       );
       
-      // Add the response to the chat
       const newBotMessage: Message = {
         id: Date.now().toString(),
         content: botResponseContent,
@@ -131,7 +120,6 @@ const JerrysBrainChat: React.FC = () => {
       
       setMessages(prev => [...prev, newBotMessage]);
       
-      // Update thought results for display
       setThoughtResults({
         mainThought: thoughtDetails,
         relatedThoughts: relatedThoughts
@@ -171,7 +159,7 @@ const JerrysBrainChat: React.FC = () => {
     <div className="flex flex-col h-full">
       <div className="bg-brain-primary text-white py-3 px-6 flex items-center justify-between shadow-md border-b border-white/10">
         <div className="flex items-center">
-          <BrainCog className="mr-2 h-6 w-6 text-brain-light" />
+          <BrainCog className="mr-2 h-6 w-6 text-brain-light animate-pulse-slow" />
           <h1 className="text-xl font-semibold">Jerry's Brain Explorer</h1>
         </div>
         <div className="flex items-center gap-2">
@@ -182,7 +170,7 @@ const JerrysBrainChat: React.FC = () => {
             onClick={toggleChat}
           >
             {showChat ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
-            <span className="ml-1">{showChat ? 'Hide Info' : 'Show Info'}</span>
+            <span className="ml-1">{showChat ? 'Hide Chat' : 'Show Chat'}</span>
           </Button>
         </div>
       </div>
@@ -230,8 +218,11 @@ const JerrysBrainChat: React.FC = () => {
               </div>
             ) : (
               <div className="flex items-center justify-center h-full flex-col">
-                <BrainCog className="h-16 w-16 mb-4 text-brain-light animate-pulse-slow" />
-                <p className="text-brain-light">Search for a concept in Jerry's Brain</p>
+                <BrainCog className="h-20 w-20 mb-6 text-brain-light animate-pulse-slow" />
+                <p className="text-brain-light text-lg mb-4">Explore Jerry's Brain</p>
+                <div className="max-w-md text-center text-brain-light/70 text-sm">
+                  Type a concept in the search box below to discover related thoughts and connections in Jerry's vast brain network.
+                </div>
               </div>
             )}
           </div>
@@ -251,7 +242,11 @@ const JerrysBrainChat: React.FC = () => {
                 disabled={!input.trim() || isThinking}
                 className="bg-brain-secondary hover:bg-brain-secondary/80 text-white"
               >
-                <Search className="h-4 w-4" />
+                {isThinking ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Search className="h-4 w-4" />
+                )}
               </Button>
             </div>
           </div>
