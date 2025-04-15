@@ -65,7 +65,7 @@ const AiAssistant: React.FC<AiAssistantProps> = ({
   }
   
   return (
-    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 bg-brain-dark/95 backdrop-blur-lg border border-white/10 rounded-lg shadow-xl z-50 overflow-hidden transition-opacity duration-300 ease-in-out">
+    <div className="fixed top-1/2 right-6 transform -translate-y-1/2 w-80 bg-brain-dark/95 backdrop-blur-lg border border-white/10 rounded-lg shadow-xl z-50 overflow-hidden transition-opacity duration-300 ease-in-out">
       <div className="flex items-center justify-between bg-brain-primary/70 px-4 py-2 border-b border-white/10">
         <div className="flex items-center">
           <BrainCircuit className="h-5 w-5 text-brain-secondary mr-2" />
