@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import ChatMessage from './ChatMessage';
 import ThoughtNode from './ThoughtNode';
@@ -35,7 +34,7 @@ const JerrysBrainChat: React.FC = () => {
   const [input, setInput] = useState<string>('');
   const [isThinking, setIsThinking] = useState<boolean>(false);
   const [thoughtResults, setThoughtResults] = useState<ThoughtResult | null>(null);
-  const [showChat, setShowChat] = useState<boolean>(true);
+  const [showChat, setShowChat] = useState<boolean>(false);
   const [graphZoom, setGraphZoom] = useState<number>(1);
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
@@ -338,7 +337,6 @@ const JerrysBrainChat: React.FC = () => {
         </div>
       </div>
       
-      {/* AI Assistant */}
       <AiAssistant 
         currentThought={thoughtResults?.mainThought}
         relatedThoughts={thoughtResults?.relatedThoughts}
