@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import ChatMessage from './ChatMessage';
 import ThoughtNode from './ThoughtNode';
@@ -13,8 +14,7 @@ import {
   generateThoughtExplorationResponse, 
   generateErrorMessage 
 } from '@/utils/responseCraft';
-import { Search, BrainCog, ZoomIn, ZoomOut, ChevronRight, ChevronLeft } from 'lucide-react';
-import { Loader2 } from 'lucide-react';
+import { Search, BrainCog, ZoomIn, ZoomOut, ChevronRight, ChevronLeft, Loader2 } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -98,7 +98,7 @@ const JerrysBrainChat: React.FC = () => {
     }
   };
 
-  const handleThoughtClick = async (thought: Thought) => {
+  const handleThoughtClick = async (thought: ApiThoughtNode) => {
     setIsThinking(true);
     
     try {

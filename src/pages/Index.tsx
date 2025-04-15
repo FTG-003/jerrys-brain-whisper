@@ -80,9 +80,9 @@ const Index: React.FC = () => {
         </Button>
       </div>
       
-      {/* API Status Indicator */}
+      {/* API Status Indicator - Centered in Header */}
       {!apiValid && !showSettings && (
-        <div className="absolute top-4 left-4 z-10 bg-red-500/80 text-white px-3 py-1 rounded-md text-sm animate-pulse">
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 bg-red-500/80 text-white px-3 py-1 rounded-md text-sm animate-pulse">
           API Not Connected
         </div>
       )}
