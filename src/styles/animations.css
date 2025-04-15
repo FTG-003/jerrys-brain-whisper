@@ -1,4 +1,3 @@
-
 /* Animation for the pulse effect used in the brain icon */
 @keyframes pulse-slow {
   0%, 100% {
@@ -10,7 +9,7 @@
 }
 
 .animate-pulse-slow {
-  animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: pulse-slow 5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 /* Blinking animation for API disconnected status */

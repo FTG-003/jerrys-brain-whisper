@@ -12,6 +12,7 @@ import { ChevronDown, Settings, AlertCircle, X, CheckCircle } from 'lucide-react
 import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { toast } from '@/hooks/use-toast';
+
 const Index: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [apiValid, setApiValid] = useState(false);
@@ -20,7 +21,6 @@ const Index: React.FC = () => {
   const [connectionNotified, setConnectionNotified] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Check API status on component mount
   useEffect(() => {
     const checkApiStatus = async () => {
       setIsLoading(true);
@@ -29,7 +29,6 @@ const Index: React.FC = () => {
         setApiValid(result.isValid);
         setShowSetupAlert(!result.isValid);
 
-        // Play sound notification when API becomes connected
         if (result.isValid && !connectionNotified && audioRef.current) {
           audioRef.current.play();
           setConnectionNotified(true);
@@ -48,16 +47,14 @@ const Index: React.FC = () => {
     };
     checkApiStatus();
 
-    // Set up an interval to periodically check API status
-    const intervalId = setInterval(checkApiStatus, 30000); // Check every 30 seconds
-
+    const intervalId = setInterval(checkApiStatus, 30000);
     return () => clearInterval(intervalId);
   }, [connectionNotified]);
-  return <div className="flex flex-col h-screen bg-brain-dark">
-      {/* Add sound effect element for API connection success */}
+
+  return (
+    <div className="flex flex-col h-screen bg-brain-dark">
       <audio ref={audioRef} src="/sounds/connect-success.mp3" preload="auto" />
-      
-      {/* API Settings Panel - Collapsible */}
+
       <div className={`transition-all duration-300 ease-in-out overflow-hidden ${showSettings ? 'max-h-[80vh]' : 'max-h-0'}`}>
         <div className="p-4 lg:p-6 bg-brain-dark/90 border-b border-white/10">
           <div className="flex justify-between items-center mb-4">
@@ -105,13 +102,11 @@ const Index: React.FC = () => {
         </div>
       </div>
       
-      {/* Header with centered logo and settings button */}
       <div className="relative bg-brain-primary text-white py-3 px-6 flex items-center justify-center border-b border-white/10">
         <div className="flex items-center">
           <h1 className="text-xl font-semibold">Jerry's Brain Explorer</h1>
         </div>
         
-        {/* Settings button now positioned at the center in header */}
         <div className="absolute left-4">
           <Button variant="outline" size="sm" onClick={() => setShowSettings(!showSettings)} className="bg-brain-dark/70 border-white/20 text-white hover:bg-brain-dark/90">
             <Settings className="h-4 w-4 mr-2" />
@@ -120,7 +115,6 @@ const Index: React.FC = () => {
         </div>
       </div>
       
-      {/* API Status Indicator - Below Header */}
       {!isLoading && <div className={`
           w-full 
           flex 
@@ -129,7 +123,7 @@ const Index: React.FC = () => {
           py-1
           transition-all
           duration-500
-          ${apiValid ? 'bg-green-600/80 text-white animate-fade-in' : 'bg-red-500/80 text-white animate-pulse'}
+          ${apiValid ? 'bg-green-600/80 text-white animate-fade-in' : 'bg-red-500/80 text-white animate-pulse-slow'}
         `}>
           {apiValid ? <div className="flex items-center gap-2 transition-opacity duration-500">
               <CheckCircle className="h-4 w-4" />
@@ -140,7 +134,6 @@ const Index: React.FC = () => {
             </div>}
         </div>}
       
-      {/* First-time Setup Alert - Only show if settings are not open */}
       {showSetupAlert && !showSettings && <div className="fixed top-24 left-1/2 transform -translate-x-1/2 z-10 max-w-md w-full">
           <Alert className="bg-brain-dark/90 border border-white/20 text-white shadow-lg">
             <AlertCircle className="h-4 w-4" />
@@ -156,12 +149,13 @@ const Index: React.FC = () => {
           </Alert>
         </div>}
       
-      {/* Brain Chat Interface - Takes Full Screen */}
       <div className="flex-1 overflow-hidden">
         <JerrysBrainChat />
       </div>
       
       <Toaster />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
