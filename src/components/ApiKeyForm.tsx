@@ -4,8 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Form, FormField, FormItem, FormLabel, FormControl } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
-import { Loader2, Save, RefreshCw } from 'lucide-react';
-import { BRAIN_ID, API_KEY, BASE_URL } from '@/services/brainApiConfig';
+import { Loader2, Save, RefreshCw, RotateCcw } from 'lucide-react';
+import { BRAIN_ID, API_KEY, BASE_URL, resetApiConfig, isUsingCustomConfig } from '@/services/brainApiConfig';
 import { toast } from '@/hooks/use-toast';
 import { validateApiConfig } from '@/services/apiValidator';
 
@@ -18,6 +18,7 @@ interface ApiFormValues {
 const ApiKeyForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
+  const [isCustomConfig, setIsCustomConfig] = useState(false);
   
   const form = useForm<ApiFormValues>({
     defaultValues: {
@@ -33,6 +34,9 @@ const ApiKeyForm: React.FC = () => {
     const storedBrainId = localStorage.getItem('brain_id') || BRAIN_ID;
     const storedApiKey = localStorage.getItem('api_key') || API_KEY;
     const storedBaseUrl = localStorage.getItem('base_url') || BASE_URL;
+    const customConfig = isUsingCustomConfig();
+    
+    setIsCustomConfig(customConfig);
     
     form.reset({
       brainId: storedBrainId,
@@ -49,9 +53,11 @@ const ApiKeyForm: React.FC = () => {
       localStorage.setItem('api_key', values.apiKey);
       localStorage.setItem('base_url', values.baseUrl);
       
+      setIsCustomConfig(true);
+      
       toast({
         title: "API Configuration Saved",
-        description: "Your TheBrain API configuration has been saved. Please reload the page or check API status.",
+        description: "Your TheBrain API configuration has been saved.",
       });
       
       // Trigger validation
@@ -87,14 +93,48 @@ const ApiKeyForm: React.FC = () => {
       }
     } catch (error) {
       console.error('Error validating API:', error);
+      toast({
+        title: "Validation Error",
+        description: error instanceof Error ? error.message : "An error occurred during validation",
+        variant: "destructive",
+      });
     } finally {
       setIsValidating(false);
     }
   };
+  
+  const handleReset = () => {
+    resetApiConfig();
+    setIsCustomConfig(false);
+    
+    form.reset({
+      brainId: BRAIN_ID,
+      apiKey: API_KEY,
+      baseUrl: BASE_URL,
+    });
+    
+    toast({
+      title: "Configuration Reset",
+      description: "API configuration has been reset to defaults.",
+    });
+  };
 
   return (
     <div className="p-6 rounded-lg border border-white/10 bg-brain-dark/50 backdrop-blur-md">
-      <h2 className="text-xl font-medium text-white mb-4">TheBrain API Configuration</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-medium text-white">TheBrain API Configuration</h2>
+        {isCustomConfig && (
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleReset}
+            className="text-white/70 hover:text-white hover:bg-brain-dark/50"
+          >
+            <RotateCcw className="h-3.5 w-3.5 mr-1" />
+            Reset to Default
+          </Button>
+        )}
+      </div>
       
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

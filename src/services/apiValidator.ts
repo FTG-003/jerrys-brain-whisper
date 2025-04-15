@@ -20,6 +20,14 @@ export async function validateApiConfig(): Promise<{
     console.log('Brain ID:', brainId);
     console.log('API Base URL:', baseUrl);
     
+    if (!brainId || !apiKey || !baseUrl) {
+      return {
+        isValid: false,
+        message: 'Missing API configuration. Please configure your API settings.',
+        details: { brainId: !!brainId, apiKey: !!apiKey, baseUrl: !!baseUrl }
+      };
+    }
+    
     // Test with a simple query that should return results if the config is valid
     const url = `${baseUrl}/brains/${brainId}/search?query=test&limit=1`;
     
@@ -34,6 +42,22 @@ export async function validateApiConfig(): Promise<{
     });
     
     console.log('Validation response status:', response.status);
+    
+    if (response.status === 404) {
+      return {
+        isValid: false,
+        message: 'API endpoint not found. Please check your Brain ID and Base URL.',
+        details: { status: response.status, statusText: response.statusText }
+      };
+    }
+    
+    if (response.status === 401) {
+      return {
+        isValid: false,
+        message: 'Authentication failed. Please check your API Key.',
+        details: { status: response.status, statusText: response.statusText }
+      };
+    }
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -56,6 +80,16 @@ export async function validateApiConfig(): Promise<{
     };
   } catch (error) {
     console.error('API Validation Error:', error);
+    
+    // Check if it's a network error
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      return {
+        isValid: false,
+        message: 'Network error. Please check your internet connection or the Base URL.',
+        details: error
+      };
+    }
+    
     return {
       isValid: false,
       message: `Error validating API: ${error instanceof Error ? error.message : String(error)}`,

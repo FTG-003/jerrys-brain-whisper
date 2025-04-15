@@ -5,6 +5,7 @@ import ApiStatusChecker from '@/components/ApiStatusChecker';
 import ApiTest from '@/components/ApiTest';
 import ApiKeyForm from '@/components/ApiKeyForm';
 import ApiKeyExplorer from '@/components/ApiKeyExplorer';
+import ApiDocumentation from '@/components/ApiDocumentation';
 import { validateApiConfig } from '@/services/apiValidator';
 import { 
   Accordion, 
@@ -12,22 +13,27 @@ import {
   AccordionItem, 
   AccordionTrigger 
 } from '@/components/ui/accordion';
-import { ChevronDown, Settings } from 'lucide-react';
+import { ChevronDown, Settings, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 const Index: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [apiValid, setApiValid] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Check API status on component mount
   useEffect(() => {
     const checkApiStatus = async () => {
+      setIsLoading(true);
       try {
         const result = await validateApiConfig();
         setApiValid(result.isValid);
       } catch (error) {
         console.error('Error checking API status:', error);
         setApiValid(false);
+      } finally {
+        setIsLoading(false);
       }
     };
     
@@ -52,6 +58,15 @@ const Index: React.FC = () => {
                     <ApiTest />
                   </div>
                 </div>
+              </AccordionContent>
+            </AccordionItem>
+            
+            <AccordionItem value="api-docs" className="border-white/10">
+              <AccordionTrigger className="text-white hover:text-white/80">
+                API Documentation
+              </AccordionTrigger>
+              <AccordionContent>
+                <ApiDocumentation />
               </AccordionContent>
             </AccordionItem>
             
@@ -81,9 +96,23 @@ const Index: React.FC = () => {
       </div>
       
       {/* API Status Indicator - Centered in Header */}
+      {!isLoading && !apiValid && (
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 flex items-center gap-2 bg-red-500/80 text-white px-3 py-1 rounded-md text-sm">
+          <AlertCircle className="h-4 w-4" />
+          <span>API Not Connected</span>
+        </div>
+      )}
+      
+      {/* First-time Setup Alert */}
       {!apiValid && !showSettings && (
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 bg-red-500/80 text-white px-3 py-1 rounded-md text-sm animate-pulse">
-          API Not Connected
+        <div className="absolute top-16 left-1/2 transform -translate-x-1/2 z-10 max-w-md w-full">
+          <Alert className="bg-brain-dark/90 border border-white/20 text-white shadow-lg">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Setup Required</AlertTitle>
+            <AlertDescription>
+              To get started, click the "API Settings" button in the top right and configure your TheBrain API access.
+            </AlertDescription>
+          </Alert>
         </div>
       )}
       
