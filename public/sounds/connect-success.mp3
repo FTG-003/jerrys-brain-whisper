@@ -1,0 +1,5 @@
+
+// This is a placeholder - we need to add an actual audio file
+// Since we can't directly write binary files, you'll need to add a suitable MP3 file 
+// to the public/sounds directory named "connect-success.mp3"
+// It should be a subtle, non-intrusive sound like a soft chime
