@@ -1,5 +1,18 @@
+
 import { ThoughtNode, ThoughtSearchResult } from './brainTypes';
 import { BRAIN_ID, API_KEY, BASE_URL } from './brainApiConfig';
+
+/**
+ * Get the current API configuration
+ * @returns The current API configuration
+ */
+function getApiConfig() {
+  return {
+    brainId: localStorage.getItem('brain_id') || BRAIN_ID,
+    apiKey: localStorage.getItem('api_key') || API_KEY,
+    baseUrl: localStorage.getItem('base_url') || BASE_URL,
+  };
+}
 
 /**
  * Search for thoughts in Jerry's Brain
@@ -16,18 +29,20 @@ export async function searchThoughts(
   try {
     console.log('Searching thoughts with params:', { query, limit, offset });
     
-    const url = `${BASE_URL}/brains/${BRAIN_ID}/search?query=${encodeURIComponent(query)}&limit=${limit}&offset=${offset}`;
+    const { brainId, apiKey, baseUrl } = getApiConfig();
+    
+    const url = `${baseUrl}/brains/${brainId}/search?query=${encodeURIComponent(query)}&limit=${limit}&offset=${offset}`;
     
     console.log('Request URL:', url);
     console.log('Request Headers:', {
-      'Authorization': `TheBrain ${API_KEY}`,
+      'Authorization': `TheBrain ${apiKey}`,
       'Content-Type': 'application/json',
     });
 
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        'Authorization': `TheBrain ${API_KEY}`,
+        'Authorization': `TheBrain ${apiKey}`,
         'Content-Type': 'application/json',
       },
     });
@@ -61,12 +76,14 @@ export async function searchThoughts(
  */
 export async function getRelatedThoughts(thoughtId: string): Promise<ThoughtNode[]> {
   try {
-    const url = `${BASE_URL}/brains/${BRAIN_ID}/thoughts/${thoughtId}/related`;
+    const { brainId, apiKey, baseUrl } = getApiConfig();
+    
+    const url = `${baseUrl}/brains/${brainId}/thoughts/${thoughtId}/related`;
 
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        'Authorization': `TheBrain ${API_KEY}`,
+        'Authorization': `TheBrain ${apiKey}`,
         'Content-Type': 'application/json',
       },
     });
@@ -90,12 +107,14 @@ export async function getRelatedThoughts(thoughtId: string): Promise<ThoughtNode
  */
 export async function getThought(thoughtId: string): Promise<ThoughtNode> {
   try {
-    const url = `${BASE_URL}/brains/${BRAIN_ID}/thoughts/${thoughtId}`;
+    const { brainId, apiKey, baseUrl } = getApiConfig();
+    
+    const url = `${baseUrl}/brains/${brainId}/thoughts/${thoughtId}`;
 
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        'Authorization': `TheBrain ${API_KEY}`,
+        'Authorization': `TheBrain ${apiKey}`,
         'Content-Type': 'application/json',
       },
     });

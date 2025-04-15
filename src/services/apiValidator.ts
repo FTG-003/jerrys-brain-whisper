@@ -11,19 +11,24 @@ export async function validateApiConfig(): Promise<{
   details?: any;
 }> {
   try {
+    // Get values from localStorage if available, otherwise use defaults
+    const brainId = localStorage.getItem('brain_id') || BRAIN_ID;
+    const apiKey = localStorage.getItem('api_key') || API_KEY;
+    const baseUrl = localStorage.getItem('base_url') || BASE_URL;
+    
     console.log('Validating API configuration');
-    console.log('Brain ID:', BRAIN_ID);
-    console.log('API Base URL:', BASE_URL);
+    console.log('Brain ID:', brainId);
+    console.log('API Base URL:', baseUrl);
     
     // Test with a simple query that should return results if the config is valid
-    const url = `${BASE_URL}/brains/${BRAIN_ID}/search?query=test&limit=1`;
+    const url = `${baseUrl}/brains/${brainId}/search?query=test&limit=1`;
     
     console.log('Validation request URL:', url);
     
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        'Authorization': `TheBrain ${API_KEY}`,
+        'Authorization': `TheBrain ${apiKey}`,
         'Content-Type': 'application/json',
       },
     });
