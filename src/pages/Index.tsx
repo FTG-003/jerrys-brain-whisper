@@ -48,6 +48,19 @@ const Index: React.FC = () => {
       {/* API Settings Panel - Collapsible */}
       <div className={`transition-all duration-300 ease-in-out overflow-hidden ${showSettings ? 'max-h-[80vh]' : 'max-h-0'}`}>
         <div className="p-4 lg:p-6 bg-brain-dark/90 border-b border-white/10">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-medium text-white">API Configuration</h2>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowSettings(false)}
+              className="bg-brain-dark/70 border-white/20 text-white hover:bg-brain-dark/90"
+            >
+              <X className="h-4 w-4 mr-2" />
+              Close Settings
+            </Button>
+          </div>
+          
           <Accordion type="single" collapsible className="w-full" defaultValue="api-config">
             <AccordionItem value="api-config" className="border-white/10">
               <AccordionTrigger className="text-white hover:text-white/80">
@@ -86,7 +99,7 @@ const Index: React.FC = () => {
       </div>
       
       {/* Settings Toggle Button */}
-      <div className="absolute top-4 right-4 z-10">
+      <div className="absolute top-4 left-4 z-10">
         <Button
           variant="outline"
           size="sm"
@@ -106,7 +119,7 @@ const Index: React.FC = () => {
         </div>
       )}
       
-      {/* First-time Setup Alert */}
+      {/* First-time Setup Alert - Only show if settings are not open */}
       {showSetupAlert && !showSettings && (
         <div className="fixed top-16 left-1/2 transform -translate-x-1/2 z-10 max-w-md w-full">
           <Alert className="bg-brain-dark/90 border border-white/20 text-white shadow-lg">
@@ -123,7 +136,7 @@ const Index: React.FC = () => {
               </Button>
             </AlertTitle>
             <AlertDescription>
-              To get started, click the "API Settings" button in the top right and configure your TheBrain API access.
+              To get started, click the "API Settings" button in the top left and configure your TheBrain API access.
             </AlertDescription>
           </Alert>
         </div>
