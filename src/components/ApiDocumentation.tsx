@@ -25,8 +25,8 @@ const ApiDocumentation: React.FC = () => {
           <h3 className="text-md font-medium text-white mb-2">How to Get API Access</h3>
           <ol className="space-y-3 list-decimal pl-5 text-white/90">
             <li>
-              Visit <a href="https://www.thebrain.com/products/api" target="_blank" rel="noopener noreferrer" className="text-brain-secondary hover:underline inline-flex items-center">
-                TheBrain.com/products/api <ExternalLink className="ml-1 h-3 w-3" />
+              Visit <a href="https://api.bra.in/index.html" target="_blank" rel="noopener noreferrer" className="text-brain-secondary hover:underline inline-flex items-center">
+                api.bra.in/index.html <ExternalLink className="ml-1 h-3 w-3" />
               </a>
             </li>
             <li>Sign up for an API account or log in to your existing account</li>
