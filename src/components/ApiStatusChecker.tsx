@@ -2,19 +2,33 @@
 import React, { useEffect, useState } from 'react';
 import { validateApiConfig } from '@/services/apiValidator';
 import { Button } from '@/components/ui/button';
-import { Loader2, CheckCircle, XCircle } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { getCurrentApiConfig } from '@/services/brainApiConfig';
 
 const ApiStatusChecker: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid'>('idle');
   const [message, setMessage] = useState<string>('');
   const [details, setDetails] = useState<any>(null);
+  const [configInfo, setConfigInfo] = useState({
+    brainId: '',
+    baseUrl: '',
+    isCustom: false
+  });
 
   const checkApiStatus = async () => {
     setStatus('checking');
     setMessage('Checking API configuration...');
     
     try {
+      // Get current config info for display
+      const config = getCurrentApiConfig();
+      setConfigInfo({
+        brainId: config.brainId,
+        baseUrl: config.baseUrl,
+        isCustom: config.isCustom
+      });
+      
       const result = await validateApiConfig();
       
       if (result.isValid) {
@@ -96,15 +110,34 @@ const ApiStatusChecker: React.FC = () => {
         </Button>
       </div>
       
+      <div className="mb-4 text-sm space-y-1">
+        <div className="text-white/70">
+          <span className="font-medium">Brain ID:</span> {configInfo.brainId}
+        </div>
+        <div className="text-white/70">
+          <span className="font-medium">Base URL:</span> {configInfo.baseUrl}
+        </div>
+        <div className="text-white/70">
+          <span className="font-medium">Config Type:</span> {configInfo.isCustom ? 'Custom' : 'Default'}
+        </div>
+      </div>
+      
       {message && (
         <div className="mb-2 text-sm text-white/80">
+          <div className="font-medium mb-1">Status Message:</div>
           {message}
         </div>
       )}
       
       {status === 'invalid' && details && (
-        <div className="text-xs p-2 rounded bg-brain-dark/90 border border-white/5 overflow-auto max-h-40">
-          <pre>{JSON.stringify(details, null, 2)}</pre>
+        <div className="mt-4">
+          <div className="flex items-center mb-1">
+            <AlertCircle className="h-4 w-4 text-amber-400 mr-1" />
+            <div className="text-sm font-medium text-white/80">Error Details:</div>
+          </div>
+          <div className="text-xs p-2 rounded bg-brain-dark/90 border border-white/5 overflow-auto max-h-40">
+            <pre>{JSON.stringify(details, null, 2)}</pre>
+          </div>
         </div>
       )}
     </div>
@@ -112,4 +145,3 @@ const ApiStatusChecker: React.FC = () => {
 };
 
 export default ApiStatusChecker;
-

@@ -5,7 +5,7 @@
  * This file contains the default API configuration values.
  * Users can override these values through the UI, which will save to localStorage.
  * 
- * Documentation: https://docs.thebrain.com/api/
+ * Documentation: https://api.bra.in/index.html
  */
 
 // Default Brain ID - Replace with your actual Brain ID for production

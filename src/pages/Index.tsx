@@ -13,7 +13,7 @@ import {
   AccordionItem, 
   AccordionTrigger 
 } from '@/components/ui/accordion';
-import { ChevronDown, Settings, AlertCircle } from 'lucide-react';
+import { ChevronDown, Settings, AlertCircle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
@@ -21,6 +21,7 @@ const Index: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [apiValid, setApiValid] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showSetupAlert, setShowSetupAlert] = useState(false);
 
   // Check API status on component mount
   useEffect(() => {
@@ -29,9 +30,11 @@ const Index: React.FC = () => {
       try {
         const result = await validateApiConfig();
         setApiValid(result.isValid);
+        setShowSetupAlert(!result.isValid);
       } catch (error) {
         console.error('Error checking API status:', error);
         setApiValid(false);
+        setShowSetupAlert(true);
       } finally {
         setIsLoading(false);
       }
@@ -45,7 +48,7 @@ const Index: React.FC = () => {
       {/* API Settings Panel - Collapsible */}
       <div className={`transition-all duration-300 ease-in-out overflow-hidden ${showSettings ? 'max-h-[80vh]' : 'max-h-0'}`}>
         <div className="p-4 lg:p-6 bg-brain-dark/90 border-b border-white/10">
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion type="single" collapsible className="w-full" defaultValue="api-config">
             <AccordionItem value="api-config" className="border-white/10">
               <AccordionTrigger className="text-white hover:text-white/80">
                 API Configuration
@@ -104,11 +107,21 @@ const Index: React.FC = () => {
       )}
       
       {/* First-time Setup Alert */}
-      {!apiValid && !showSettings && (
-        <div className="absolute top-16 left-1/2 transform -translate-x-1/2 z-10 max-w-md w-full">
+      {showSetupAlert && !showSettings && (
+        <div className="fixed top-16 left-1/2 transform -translate-x-1/2 z-10 max-w-md w-full">
           <Alert className="bg-brain-dark/90 border border-white/20 text-white shadow-lg">
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Setup Required</AlertTitle>
+            <AlertTitle className="flex justify-between items-center">
+              <span>Setup Required</span>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-6 w-6 p-0 text-white/70 hover:bg-white/10"
+                onClick={() => setShowSetupAlert(false)}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </AlertTitle>
             <AlertDescription>
               To get started, click the "API Settings" button in the top right and configure your TheBrain API access.
             </AlertDescription>

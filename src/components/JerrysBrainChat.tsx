@@ -4,6 +4,7 @@ import ChatMessage from './ChatMessage';
 import ThoughtNode from './ThoughtNode';
 import ThinkingIndicator from './ThinkingIndicator';
 import ThoughtGraph from './ThoughtGraph';
+import AiAssistant from './AiAssistant';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { searchThoughts, getRelatedThoughts, getThought } from '@/services/brainApi';
@@ -105,6 +106,45 @@ const JerrysBrainChat: React.FC = () => {
       const [thoughtDetails, relatedThoughts] = await Promise.all([
         getThought(thought.id),
         getRelatedThoughts(thought.id)
+      ]);
+      
+      const botResponseContent = generateThoughtExplorationResponse(
+        thoughtDetails, 
+        relatedThoughts
+      );
+      
+      const newBotMessage: Message = {
+        id: Date.now().toString(),
+        content: botResponseContent,
+        isUser: false
+      };
+      
+      setMessages(prev => [...prev, newBotMessage]);
+      
+      setThoughtResults({
+        mainThought: thoughtDetails,
+        relatedThoughts: relatedThoughts
+      });
+    } catch (error) {
+      console.error('Error getting thought details:', error);
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        content: generateErrorMessage(),
+        isUser: false
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsThinking(false);
+    }
+  };
+  
+  const handleSuggestionClick = async (thoughtId: string) => {
+    setIsThinking(true);
+    
+    try {
+      const [thoughtDetails, relatedThoughts] = await Promise.all([
+        getThought(thoughtId),
+        getRelatedThoughts(thoughtId)
       ]);
       
       const botResponseContent = generateThoughtExplorationResponse(
@@ -297,6 +337,13 @@ const JerrysBrainChat: React.FC = () => {
           )}
         </div>
       </div>
+      
+      {/* AI Assistant */}
+      <AiAssistant 
+        currentThought={thoughtResults?.mainThought}
+        relatedThoughts={thoughtResults?.relatedThoughts}
+        onSuggestionClick={handleSuggestionClick}
+      />
     </div>
   );
 };

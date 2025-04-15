@@ -37,12 +37,15 @@ const ApiDocumentation: React.FC = () => {
         </div>
         
         <div className="bg-brain-dark/70 p-4 rounded-lg border border-white/10">
-          <h3 className="text-md font-medium text-white mb-2">Setting Up in This App</h3>
+          <h3 className="text-md font-medium text-white mb-2">Important Configuration Notes</h3>
           <p className="text-white/90 mb-3">
-            Once you have your credentials, click the "API Settings" button at the top of the page and enter your information in the API Configuration form.
+            <strong>Base URL:</strong> Make sure to use <code className="bg-black/30 px-1 py-0.5 rounded">https://api.bra.in/v2</code> as the API base URL, not the documentation URL.
+          </p>
+          <p className="text-white/90 mb-3">
+            <strong>Authentication:</strong> Your API key must be included in request headers as <code className="bg-black/30 px-1 py-0.5 rounded">Authorization: TheBrain YOUR_API_KEY</code>
           </p>
           <p className="text-white/90">
-            After saving, use the Test Connection button to verify your connection is working properly.
+            After configuring your API settings, use the Test Connection button to verify your connection is working properly.
           </p>
         </div>
         
@@ -50,7 +53,7 @@ const ApiDocumentation: React.FC = () => {
           <AlertTitle>Need Help?</AlertTitle>
           <AlertDescription>
             For more detailed information, please refer to
-            <a href="https://docs.thebrain.com/api/" target="_blank" rel="noopener noreferrer" className="ml-1 text-brain-secondary hover:underline inline-flex items-center">
+            <a href="https://api.bra.in/index.html" target="_blank" rel="noopener noreferrer" className="ml-1 text-brain-secondary hover:underline inline-flex items-center">
               TheBrain API Documentation <ExternalLink className="ml-1 h-3 w-3" />
             </a>
           </AlertDescription>
