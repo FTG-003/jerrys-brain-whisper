@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { validateApiConfig } from '@/services/apiValidator';
 import { Button } from '@/components/ui/button';
 import { Loader2, CheckCircle, XCircle } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
 const ApiStatusChecker: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid'>('idle');
@@ -18,16 +19,31 @@ const ApiStatusChecker: React.FC = () => {
       
       if (result.isValid) {
         setStatus('valid');
+        toast({
+          title: "API Connection Successful",
+          description: "Your TheBrain API is now connected.",
+        });
       } else {
         setStatus('invalid');
+        toast({
+          title: "API Connection Failed",
+          description: result.message,
+          variant: "destructive"
+        });
       }
       
       setMessage(result.message);
       setDetails(result.details);
     } catch (error) {
       setStatus('invalid');
-      setMessage(`Error checking API status: ${error instanceof Error ? error.message : String(error)}`);
-      setDetails(error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      setMessage(`Error checking API status: ${errorMessage}`);
+      
+      toast({
+        title: "Connection Error",
+        description: errorMessage,
+        variant: "destructive"
+      });
     }
   };
   
@@ -96,3 +112,4 @@ const ApiStatusChecker: React.FC = () => {
 };
 
 export default ApiStatusChecker;
+
